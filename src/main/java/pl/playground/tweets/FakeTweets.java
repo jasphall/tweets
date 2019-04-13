@@ -1,7 +1,5 @@
 package pl.playground.tweets;
 
-import me.xdrop.jrand.JRand;
-import me.xdrop.jrand.generators.text.SentenceGenerator;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -14,11 +12,9 @@ class FakeTweets implements Tweets {
 
     private final Flux<Tweet> tweetsStream = defaultTweetStream();
 
-    private final SentenceGenerator sentenceGenerator;
     private final List<Tweet> tweets;
 
     FakeTweets() {
-        this.sentenceGenerator = JRand.sentence();
         this.tweets = new ArrayList<>();
 
         for (long i = 0; i < 100_000; i++) {
@@ -43,7 +39,7 @@ class FakeTweets implements Tweets {
     }
 
     private Tweet randomTweet(long sequenceId) {
-        return new Tweet(String.valueOf(sequenceId), sentenceGenerator.gen(), UUID.randomUUID().toString());
+        return new Tweet(String.valueOf(sequenceId), String.format("Text no {}", sequenceId), UUID.randomUUID().toString());
     }
 
 }
