@@ -14,7 +14,8 @@ class RoutesConfiguration {
     @Bean
     RouterFunction<ServerResponse> routes(TweetsHandler tweetsHandler) {
         return route(GET("/tweets/json"), tweetsHandler::getAsJson)
-                .andRoute(GET("/tweets/sse"), tweetsHandler::getAsSSE);
+                .andRoute(GET("/tweets/sse"), tweetsHandler::getAsSSE)
+                .andRoute(GET("/configure/speed"), tweetsHandler::changeSpeed);
     }
 
 }

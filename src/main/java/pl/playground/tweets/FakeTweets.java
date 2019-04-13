@@ -3,6 +3,7 @@ package pl.playground.tweets;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Component
 class FakeTweets implements Tweets {
 
-    private final Flux<Tweet> tweetsStream = defaultTweetStream();
+    private Flux<Tweet> currentStream = defaultTweetStream();
 
     private final List<Tweet> tweets;
 
@@ -24,7 +25,13 @@ class FakeTweets implements Tweets {
 
     @Override
     public Flux<Tweet> tweetsStream() {
-         return tweetsStream;
+         return currentStream;
+    }
+
+    @Override
+    public Flux<Tweet> changeSpeed(Duration change) {
+        currentStream = currentStream.delayElements(change);
+        return currentStream;
     }
 
     private Flux<Tweet> defaultTweetStream() {
@@ -35,7 +42,8 @@ class FakeTweets implements Tweets {
                             sink.next(tweets.get(state));
                             return state+1;
                         })
-                 .cast(Tweet.class);
+                 .cast(Tweet.class)
+                 .delayElements(Duration.ofSeconds(1));
     }
 
     private Tweet randomTweet(long sequenceId) {

@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Optional;
 
 @Component
@@ -33,6 +34,17 @@ class TweetsHandler {
                 .ok()
                 .contentType(MediaType.TEXT_EVENT_STREAM)
                 .body(tweets.tweetsStream().take(count), Tweet.class);
+    }
+
+    Mono<ServerResponse> changeSpeed(ServerRequest serverRequest) {
+        Optional<String> speedInMillisParam = serverRequest.queryParam("speedInMillis");
+
+        if (speedInMillisParam.isPresent()) {
+            Duration change = Duration.ofMillis(Long.valueOf(speedInMillisParam.get()));
+            tweets.changeSpeed(change);
+        }
+
+        return ServerResponse.ok().build();
     }
 
     private int getCountParamFromRequest(ServerRequest serverRequest) {
