@@ -39,7 +39,7 @@ class FakeTweets implements Tweets {
     }
 
     private Tweet randomTweet(long sequenceId) {
-        return new Tweet(String.valueOf(sequenceId), String.format("Text no {}", sequenceId), UUID.randomUUID().toString());
+        return new Tweet(String.valueOf(sequenceId), String.format("Text no %d", sequenceId), UUID.randomUUID().toString());
     }
 
 }
